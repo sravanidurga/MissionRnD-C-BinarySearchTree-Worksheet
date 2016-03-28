@@ -30,7 +30,6 @@ struct node{
 };
 
 
-
 int* BSTRighttoLeftRows(struct node* root)
 {
     return NULL;
