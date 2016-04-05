@@ -29,8 +29,85 @@ struct node{
 	struct node *right;
 };
 
+struct listnode
+{
+	struct node* tnode;
+	struct listnode *next;
+};
+struct Queue
+{
+	struct listnode *front;
+	struct listnode *rear;
+};
+struct Queue * CreateQueue()
+{
+	struct Queue *Q = NULL;
+	Q = (struct Queue *)malloc(sizeof(struct Queue));
+	Q->front = Q->rear = NULL;
+	return Q;
+}
+int isEmptyQueue(struct Queue *Q)
+{
+	return (Q->front == NULL);
+}
+void EnQueue(struct Queue *Q, struct node *original)
+{
+	struct listnode *temp = NULL;
+	temp = (struct listnode *)malloc(sizeof(struct listnode));
+	temp->tnode = original;
+	temp->next = NULL;
+	if (Q->front == NULL)
+		Q->rear = NULL;
+	if (Q->rear)
+	{
+		Q->rear->next = temp;
+		Q->rear = temp;
+	}
+	else
+		Q->rear = temp;
+	if (Q->front == NULL)
+		Q->front = Q->rear;
+	//printf("%d enqueued successfully \n", original->data);
+}
+struct listnode * DeQueue(struct Queue *Q)
+{
+	struct listnode *temp = NULL, *temp1 = NULL;
+	if (isEmptyQueue(Q))
+		return NULL;
+	temp = temp1 = Q->front;
+	Q->front = Q->front->next;
 
+	//free(temp1);
+	//printf("\n%d dequeued successfully:", temp->tnode->data);
+	//printf("\n Q->front value is %d", Q->front);
+	return temp;
+
+}
 int* BSTRighttoLeftRows(struct node* root)
 {
-    return NULL;
+	struct node *temp = NULL;
+	struct listnode *lisnod = NULL;
+	struct Queue *Q = NULL;
+	int *arr = NULL, k = 0;
+	if (root == NULL)
+		return NULL;
+	Q = CreateQueue();
+	EnQueue(Q, root);
+	while (!isEmptyQueue(Q))
+	{
+		lisnod = DeQueue(Q);
+		arr = (int *)realloc(arr, sizeof(int)*(k + 1));
+		*(arr + k) = lisnod->tnode->data;
+		//printf("a[%d] is %d\n", k, *(arr + k));
+		k++;
+		if (lisnod->tnode->right)
+			EnQueue(Q, lisnod->tnode->right);
+		if (lisnod->tnode->left)
+			EnQueue(Q, lisnod->tnode->left);
+		//free(lisnod);
+
+	}
+
+	return arr;
+
 }
